@@ -28,8 +28,10 @@ public class TweetUserService {
      * (Recupera o usuário atualmente autenticado.)
      */
     private TweetUser getAuthenticatedUser() {
-        String screenName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByScreenName(screenName)
+        String userIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = Long.parseLong(userIdStr);
+
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Authenticated user not found"));
     }
 
