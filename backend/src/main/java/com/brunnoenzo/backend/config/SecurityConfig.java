@@ -1,9 +1,9 @@
 package com.brunnoenzo.backend.config;
 
 import com.brunnoenzo.backend.repository.TweetUserRepository;
-import com.brunnoenzo.backend.service.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+// Remova o lombok daqui, não precisamos mais do construtor
+// import lombok.RequiredArgsConstructor; 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,10 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+// @RequiredArgsConstructor // <-- REMOVA ESTA LINHA
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+    // private final JwtAuthFilter jwtAuthFilter; // <-- REMOVA ESTA LINHA
 
     // URLs públicas que não exigem autenticação
     private static final String[] PUBLIC_URLS = {
@@ -35,29 +35,29 @@ public class SecurityConfig {
     };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception { 
+        // ^-- ADICIONE JwtAuthFilter jwtAuthFilter AQUI como parâmetro
         http
-                .csrf(csrf -> csrf.disable()) // Desabilita CSRF (comum em APIs stateless)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // API não guarda estado (sessão)
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_URLS).permitAll() // Permite acesso público
-                        .requestMatchers(HttpMethod.GET, "/api/tweets/**").permitAll() // Todos podem ver tweets
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll() // Todos podem ver usuários
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Rotas de admin
-                        .anyRequest().authenticated() // Qualquer outra rota exige autenticação
+                        .requestMatchers(PUBLIC_URLS).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tweets/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
-                        // Trata erros de autenticação (ex: token inválido)
                         (request, response, authException) ->
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
                 ))
-                // Adiciona nosso filtro JWT antes do filtro padrão do Spring
+                // Use o jwtAuthFilter que veio do parâmetro
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Provedor de serviço para buscar usuários (necessário para o Spring Security)
+    // Provedor de serviço para buscar usuários
     @Bean
     public UserDetailsService userDetailsService(TweetUserRepository userRepository) {
         return screenName -> userRepository.findByScreenName(screenName)
