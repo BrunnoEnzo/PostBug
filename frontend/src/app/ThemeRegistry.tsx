@@ -5,17 +5,20 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import NextAppDirEmotionCacheProvider from "@/app/EmotionCache";
 
-// Um tema básico escuro para combinar com o PostBug
-const darkTheme = createTheme({
+// Alterado para um tema claro obrigatório
+const lightTheme = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light", // <-- ALTERADO PARA 'light'
     primary: {
-      main: "#3b82f6", // Um azul similar ao neon
+      main: "#3b82f6", // Mantém o azul neon que definimos
     },
     background: {
-      default: "#0a0a0a",
-      paper: "#171717",
+      default: "#ffffff", // Fundo padrão branco
+      paper: "#f5f5f5",   // Fundo de "cartões" levemente cinza
     },
+    text: {
+      primary: "#171717" // Cor do texto primário (preto)
+    }
   },
 });
 
@@ -26,7 +29,8 @@ export default function ThemeRegistry({
 }) {
   return (
     <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
-      <ThemeProvider theme={darkTheme}>
+      {/* Usa o novo lightTheme */}
+      <ThemeProvider theme={lightTheme}>
         {/* CssBaseline normaliza o estilo e aplica a cor de fundo */}
         <CssBaseline />
         {children}
