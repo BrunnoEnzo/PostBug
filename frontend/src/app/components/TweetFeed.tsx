@@ -129,7 +129,7 @@ export default function TweetFeed() {
 
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
       {/* Botão Criar Tweet */}
       {isLoggedIn && (
         <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>

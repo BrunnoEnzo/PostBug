@@ -40,21 +40,35 @@ export default function LoginPage() {
   };
 
   return (
-    <Container maxWidth="xs">
+    // O CONTAINER AGORA ESTÁ LIMPO, SEM O SX DE LAYOUT
+    // O padding 'py: 4' é opcional mas bom para telas curtas
+    <Container maxWidth="xs" sx={{ py: 4 }}>
       <Box
         sx={{
-          marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          width: '100%',
         }}
       >
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+                width: '100%', 
+                p: 3,  
+                borderRadius: 2, 
+                boxShadow: 3,    
+                border: '1px solid', 
+                borderColor: 'divider', 
+                backgroundColor: '#ffffff', 
+            }}
+        >
+            <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
+                Login
+            </Typography>
           <TextField
-            margin="normal"
+            margin="dense" // <-- Campos compactos
             required
             fullWidth
             id="screenName"
@@ -66,7 +80,7 @@ export default function LoginPage() {
             onChange={(e) => setScreenName(e.target.value)}
           />
           <TextField
-            margin="normal"
+            margin="dense" // <-- Campos compactos
             required
             fullWidth
             name="password"

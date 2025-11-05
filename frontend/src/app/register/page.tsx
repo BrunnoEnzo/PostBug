@@ -80,21 +80,56 @@ export default function RegisterPage() {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container 
+        maxWidth="xs"
+        sx={{
+            height: '100%', // Ocupa 100% da altura do <main>
+            display: 'flex',
+            flexDirection: 'column',
+            
+            // Padrão (Mobile): Alinha no topo
+            justifyContent: 'flex-start',
+            
+            // Padrão (Mobile): Adiciona um padding-top de 64px (8 * 8px)
+            pt: 8,
+            pb: 4, // Padding inferior para segurança
+
+            // Media Query (Desktop): Centraliza verticalmente
+            '@media (min-width: 600px)': {
+                justifyContent: 'center',
+                pt: 0, // Reseta o padding no desktop
+                pb: 0,
+            }
+        }}>
       <Box
         sx={{
-          marginTop: 8,
+          // marginTop: 8, // Removido
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          width: '100%', // Adicionado
         }}
       >
-        <Typography component="h1" variant="h5">
-          Cadastro
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        {/* O Título foi movido para DENTRO do card (Box do form) */}
+        
+        <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{
+                width: '100%', // Adicionado
+                p: 3,  // Adicionado
+                borderRadius: 2, // Adicionado
+                boxShadow: 3,    // Adicionado
+                border: '1px solid', // Adicionado
+                borderColor: 'divider', // Adicionado
+                backgroundColor: '#ffffff', // Adicionado
+            }}
+        >
+          <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
+            Cadastro
+          </Typography>
           <TextField
-            margin="normal"
+            margin="dense" // <-- ALTERADO
             required
             fullWidth
             id="screenName"
@@ -105,7 +140,7 @@ export default function RegisterPage() {
             onChange={(e) => setScreenName(e.target.value)}
           />
           <TextField
-            margin="normal"
+            margin="dense" // <-- ALTERADO
             required
             fullWidth
             name="password"
@@ -116,7 +151,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
-            margin="normal"
+            margin="dense" // <-- ALTERADO
             fullWidth
             name="bio"
             label="Bio (opcional)"
@@ -126,7 +161,7 @@ export default function RegisterPage() {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />
-          <FormControl fullWidth margin="normal">
+          <FormControl fullWidth margin="dense"> {/* <-- ALTERADO */}
             <InputLabel id="role-label">Tipo de Conta</InputLabel>
             <Select
               labelId="role-label"
