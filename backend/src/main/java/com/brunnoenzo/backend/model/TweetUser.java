@@ -3,7 +3,6 @@ package com.brunnoenzo.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-// Importações de Lombok específicas
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,16 +16,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Objects; // Importar Objects para equals/hashCode
+import java.util.Objects;
 
 @Entity
-// Substituir @Data por anotações específicas
 @Getter
 @Setter
-@ToString(exclude = {"tweets", "comments", "following", "followers"}) // Exclui coleções do toString
+@ToString(exclude = {"tweets", "comments", "following", "followers"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tweet_user")
+
+/**
+ * (Entidade representando um usuário do sistema.)
+ */
 public class TweetUser implements UserDetails {
 
     @Id
@@ -70,7 +72,6 @@ public class TweetUser implements UserDetails {
     private Set<TweetUser> followers = new HashSet<>();
 
     // --- Métodos do UserDetails (Spring Security) ---
-    // ... (métodos do UserDetails permanecem iguais) ...
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
@@ -101,7 +102,7 @@ public class TweetUser implements UserDetails {
         return true;
     }
 
-    // --- Métodos equals() e hashCode() manuais ---
+    // --- Métodos equals() e hashCode() ---
 
     @Override
     public boolean equals(Object o) {
@@ -114,7 +115,6 @@ public class TweetUser implements UserDetails {
 
     @Override
     public int hashCode() {
-        // Usa apenas o ID para o hashCode
         return Objects.hash(userid);
     }
 }

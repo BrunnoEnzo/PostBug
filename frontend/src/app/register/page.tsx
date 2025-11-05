@@ -18,8 +18,8 @@ import {
   SelectChangeEvent
 } from '@mui/material';
 import { Role, UserCreateDTO } from '@/app/types/auth';
-import api from '@/app/services/api'; // Importa o serviço centralizado
-import { isAxiosError } from 'axios'; // Importa helper de erro
+import api from '@/app/services/api'; 
+import { isAxiosError } from 'axios';
 
 export default function RegisterPage() {
   const [screenName, setScreenName] = useState('');
@@ -43,12 +43,11 @@ export default function RegisterPage() {
       screenName,
       password,
       bio,
-      profileImage: null, // Como você ajustou
+      profileImage: null,
       role,
     };
 
     try {
-      // Substitui o fetch pelo 'api.post'
       await api.post('/auth/register', dto);
 
       setSuccess('Usuário registrado com sucesso! Redirecionando para o login...');
@@ -57,7 +56,6 @@ export default function RegisterPage() {
       }, 2000);
 
     } catch (err: any) {
-      // Tratamento de erro robusto com Axios
       let errorMessage = 'Ocorreu um erro desconhecido.';
 
       if (isAxiosError(err) && err.response) {
@@ -80,38 +78,34 @@ export default function RegisterPage() {
   };
 
   return (
-    // O CONTAINER FOI LIMPO. O 'sx' complexo de layout foi removido.
-    // A tag <main> em globals.css agora controla o espaçamento e centralização.
     <Container maxWidth="xs" sx={{ paddingBlock: '3rem' }}>
       <Box
         sx={{
-          // marginTop: 8, // Removido
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          width: '100%', // Adicionado
+          width: '100%',
         }}
       >
-        {/* O Título foi movido para DENTRO do card (Box do form) */}
         
         <Box 
             component="form" 
             onSubmit={handleSubmit} 
             sx={{
-                width: '100%', // Adicionado
-                p: 3,  // Adicionado
-                borderRadius: 2, // Adicionado
-                boxShadow: 3,    // Adicionado
-                border: '1px solid', // Adicionado
-                borderColor: 'divider', // Adicionado
-                backgroundColor: '#ffffff', // Adicionado
+                width: '100%',
+                p: 3, 
+                borderRadius: 2,
+                boxShadow: 3, 
+                border: '1px solid',
+                borderColor: 'divider',
+                backgroundColor: '#ffffff', 
             }}
         >
           <Typography component="h1" variant="h5" sx={{ textAlign: 'center', mb: 2 }}>
             Cadastro
           </Typography>
           <TextField
-            margin="dense" // <-- ALTERADO
+            margin="dense" 
             required
             fullWidth
             id="screenName"
@@ -122,7 +116,7 @@ export default function RegisterPage() {
             onChange={(e) => setScreenName(e.target.value)}
           />
           <TextField
-            margin="dense" // <-- ALTERADO
+            margin="dense"
             required
             fullWidth
             name="password"
@@ -133,7 +127,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
-            margin="dense" // <-- ALTERADO
+            margin="dense"
             fullWidth
             name="bio"
             label="Bio (opcional)"
@@ -143,7 +137,7 @@ export default function RegisterPage() {
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />
-          <FormControl fullWidth margin="dense"> {/* <-- ALTERADO */}
+          <FormControl fullWidth margin="dense">
             <InputLabel id="role-label">Tipo de Conta</InputLabel>
             <Select
               labelId="role-label"

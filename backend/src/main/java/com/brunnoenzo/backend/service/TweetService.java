@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+
+/**
+ * (Serviço responsável pelas operações relacionadas a tweets.)
+ */
 public class TweetService {
 
     private final TweetRepository tweetRepository;

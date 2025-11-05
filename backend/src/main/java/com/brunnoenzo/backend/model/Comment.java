@@ -3,7 +3,7 @@ package com.brunnoenzo.backend.model;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects; // Importar
+import java.util.Objects; 
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-// Importações de Lombok específicas
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,12 +24,15 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Entity
-// Substituir @Data
 @Getter
 @Setter
 @ToString(exclude = {"tweet", "author", "parentComment", "replies"}) // Excluir relacionamentos
 @NoArgsConstructor
 @AllArgsConstructor
+
+/**
+ * (Entidade representando um comentário em um tweet.)
+ */
 public class Comment {
 
     @Id

@@ -13,6 +13,10 @@ import java.time.Instant;
 import java.util.stream.Collectors;
 
 @Service
+
+/**
+ * (Serviço responsável pela geração de tokens JWT para autenticação.)
+ */
 public class TokenService {
 
     @Autowired
@@ -22,14 +26,11 @@ public class TokenService {
     private long jwtExpiration;
 
     /**
-     * Gera um novo token JWT para o usuário.
-     * Esta é a única função deste serviço agora.
+     * (Gera um novo token JWT para o usuário.)
      */
     public String generateToken(TweetUser userDetails) {
         Instant now = Instant.now();
 
-        // Coleta as "ROLES" e transforma em "SCOPES"
-        // ex: "ROLE_ADMIN ROLE_USER"
         String scopes = userDetails.getAuthorities().stream()
                 .map(authority -> "ROLE_" + authority.getAuthority())
                 .collect(Collectors.joining(" "));
@@ -38,10 +39,9 @@ public class TokenService {
                 .issuer("postbug-api")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(jwtExpiration / 1000)) // Converte ms para segundos
-                // O "subject" agora é o ID do usuário. ISSO É IMPORTANTE!
                 .subject(userDetails.getUserid().toString())
-                .claim("scope", scopes) // Usado para autorização (ex: hasAuthority('SCOPE_ROLE_ADMIN'))
-                .claim("screenName", userDetails.getScreenName()) // Claim customizado se precisarmos
+                .claim("scope", scopes) // Usado para autorização
+                .claim("screenName", userDetails.getScreenName())
                 .build();
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

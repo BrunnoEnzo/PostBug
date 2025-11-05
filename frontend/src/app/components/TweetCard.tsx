@@ -113,8 +113,7 @@ export default function TweetCard({
       setDeleteLoading(false); // <-- Permite tentar de novo se falhar
     }
   };
-
-  // --- FUNÇÃO DE RENDERIZAÇÃO CORRIGIDA ---
+  
   const renderActionButtons = () => {
     
     // Caso 1: O usuário é o dono do tweet.
@@ -198,7 +197,6 @@ export default function TweetCard({
       </Box>
     );
   };
-  // --- FIM DA FUNÇÃO CORRIGIDA ---
 
   return (
     <Card 
@@ -211,7 +209,7 @@ export default function TweetCard({
             {tweet.authorScreenName.charAt(0).toUpperCase()}
           </Avatar>
         }
-        action={renderActionButtons()} // <-- Chama a função corrigida
+        action={renderActionButtons()} 
         title={
           <Typography variant="h6" className="font-bold">
             @{tweet.authorScreenName}

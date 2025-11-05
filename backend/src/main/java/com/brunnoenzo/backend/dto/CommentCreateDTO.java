@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * DTO for creating a new Comment.
  * (DTO para criar um novo Comentário.)
  */
 public record CommentCreateDTO(

@@ -12,34 +12,33 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Global exception handler for the API.
  * (Manipulador de exceções global para a API.)
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Trata erros de "Não Encontrado" (ex: usuário ou tweet não existe)
+    // Trata erros de "Não Encontrado"
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleEntityNotFound(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", ex.getMessage()));
     }
 
-    // Trata erros de "Acesso Negado" (ex: tentar editar o tweet de outro usuário)
+    // Trata erros de "Acesso Negado" 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, String>> handleAccessDenied(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Map.of("error", ex.getMessage()));
     }
 
-    // Trata erros de "Argumento Inválido" (ex: email já em uso, senha curta)
+    // Trata erros de "Argumento Inválido"
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", ex.getMessage()));
     }
 
-    // Trata erros de validação dos DTOs (@NotBlank, @Size, etc.)
+    // Trata erros de validação dos DTOs
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, ?>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()

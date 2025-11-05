@@ -1,6 +1,8 @@
 package com.brunnoenzo.backend.dto;
 
-// DTO para resposta do token
+/**
+ * (DTO para resposta de token JWT.)
+ */
 public record TokenResponseDTO(
         String token
 ) {}

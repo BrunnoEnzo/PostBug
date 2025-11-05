@@ -6,5 +6,9 @@ import org.springframework.stereotype.Repository;
 import com.brunnoenzo.backend.model.Tweet;
 
 @Repository
+
+/**
+ * (Repositório para a entidade Tweet.)
+ */
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
 }

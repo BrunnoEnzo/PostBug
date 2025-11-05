@@ -17,6 +17,10 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Tag(name = "Users", description = "Endpoints for managing users and follows")
+
+/**
+ * (Controlador para gerenciamento de usuários.)
+ */
 public class TweetUserController {
 
     private final TweetUserService userService;

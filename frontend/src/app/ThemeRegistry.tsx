@@ -5,12 +5,11 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import NextAppDirEmotionCacheProvider from "@/app/EmotionCache";
 
-// Alterado para um tema claro obrigatório
 const lightTheme = createTheme({
   palette: {
-    mode: "light", // <-- ALTERADO PARA 'light'
+    mode: "light",
     primary: {
-      main: "#3b82f6", // Mantém o azul neon que definimos
+      main: "#3b82f6", 
     },
     background: {
       default: "#ffffff", // Fundo padrão branco
@@ -29,9 +28,7 @@ export default function ThemeRegistry({
 }) {
   return (
     <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
-      {/* Usa o novo lightTheme */}
       <ThemeProvider theme={lightTheme}>
-        {/* CssBaseline normaliza o estilo e aplica a cor de fundo */}
         <CssBaseline />
         {children}
       </ThemeProvider>

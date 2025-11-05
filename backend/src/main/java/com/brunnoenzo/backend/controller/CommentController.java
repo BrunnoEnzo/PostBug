@@ -18,6 +18,10 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Tag(name = "Comments", description = "Endpoints for managing comments and replies")
+
+/**
+ * (Controlador para gerenciamento de comentários.)
+ */
 public class CommentController {
 
     private final CommentService commentService;
@@ -39,17 +43,6 @@ public class CommentController {
         CommentResponseDTO newComment = commentService.createCommentOnTweet(tweetId, dto);
         return ResponseEntity.created(URI.create("/api/comments/" + newComment.id()))
                 .body(newComment);
-    }
-
-    @PostMapping("/comments/{commentId}/reply")
-    @Operation(summary = "Reply to a comment", description = "Cria um novo comentário em resposta a outro comentário",
-               security = @SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<CommentResponseDTO> replyToComment(
-            @PathVariable Long commentId,
-            @Valid @RequestBody CommentCreateDTO dto) {
-        CommentResponseDTO newReply = commentService.replyToComment(commentId, dto);
-        return ResponseEntity.created(URI.create("/api/comments/" + newReply.id()))
-                .body(newReply);
     }
 
     @DeleteMapping("/comments/{id}")

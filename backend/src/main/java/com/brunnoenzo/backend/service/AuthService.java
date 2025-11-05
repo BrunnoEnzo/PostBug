@@ -13,12 +13,14 @@ import com.brunnoenzo.backend.model.TweetUser;
 import com.brunnoenzo.backend.repository.TweetUserRepository;
 
 import lombok.RequiredArgsConstructor;
-
-// --- ADICIONAR IMPORT ---
 import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
+
+/**
+ * (Serviço responsável pela autenticação e registro de usuários.)
+ */
 public class AuthService {
 
     private final TweetUserRepository userRepository;
@@ -46,21 +48,16 @@ public class AuthService {
 
         TweetUser savedUser = userRepository.save(newUser);
         
-        // --- CORREÇÃO AQUI ---
-        // O construtor do UserResponseDTO agora espera 8 argumentos,
-        // incluindo a lista de followingIds.
-        // Também devemos passar o objeto 'Role' e não o .name() String.
         return new UserResponseDTO(
                 savedUser.getUserid(),
                 savedUser.getScreenName(),
                 savedUser.getProfileImage(),
                 savedUser.getBio(),
-                savedUser.getRole(), // <-- FIX 1: Passa o objeto Role
+                savedUser.getRole(),
                 0, 
                 0,
-                Collections.emptySet() // <-- FIX 2: Adiciona o Set<Long> followingIds
+                Collections.emptySet()
         );
-        // --- FIM DA CORREÇÃO ---
     }
 
     /**

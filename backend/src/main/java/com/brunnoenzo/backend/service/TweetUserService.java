@@ -1,7 +1,7 @@
 package com.brunnoenzo.backend.service;
 
 import java.util.List;
-import java.util.Set; // <-- IMPORTAR
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +19,16 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
+/**
+ * (Serviço responsável pelas operações relacionadas a usuários.)
+ */
 public class TweetUserService {
 
     private final TweetUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Retrieves the currently authenticated user.
      * (Recupera o usuário atualmente autenticado.)
      */
     private TweetUser getAuthenticatedUser() {
@@ -37,17 +40,14 @@ public class TweetUserService {
     }
 
     /**
-     * Converts a TweetUser entity to a UserResponseDTO.
      * (Converte uma entidade TweetUser para UserResponseDTO.)
      */
     private UserResponseDTO mapToUserResponseDTO(TweetUser user) {
         
-        // --- MUDANÇA PRINCIPAL AQUI ---
         // Mapeia a lista de usuários seguidos para uma lista de IDs
         Set<Long> followingIds = user.getFollowing().stream()
                 .map(TweetUser::getUserid)
                 .collect(Collectors.toSet());
-        // --- FIM DA MUDANÇA ---
 
         return new UserResponseDTO(
                 user.getUserid(),
@@ -61,27 +61,24 @@ public class TweetUserService {
         );
     }
 
-    // Esta anotação é VITAL para que o .getFollowing() funcione
     @Transactional(readOnly = true) 
     public List<UserResponseDTO> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(this::mapToUserResponseDTO) // Agora chama o método corrigido
+                .map(this::mapToUserResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    // Esta anotação é VITAL para que o .getFollowing() funcione
     @Transactional(readOnly = true) 
     public UserResponseDTO getUserById(Long id) {
         TweetUser user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-        return mapToUserResponseDTO(user); // Agora chama o método corrigido
+        return mapToUserResponseDTO(user); 
     }
 
-    // Esta anotação é VITAL para que o .getFollowing() funcione
     @Transactional(readOnly = true) 
     public UserResponseDTO getMe() {
         TweetUser user = getAuthenticatedUser();
-        return mapToUserResponseDTO(user); // Agora chama o método corrigido
+        return mapToUserResponseDTO(user);
     }
 
     @Transactional
@@ -106,7 +103,6 @@ public class TweetUserService {
     @Transactional
     public void deleteUser() {
         TweetUser user = getAuthenticatedUser();
-        // A lógica de cascata no banco de dados deve cuidar de tweets e comentários
         userRepository.delete(user);
     }
 
@@ -133,6 +129,4 @@ public class TweetUserService {
         currentUser.getFollowing().remove(userToUnfollow);
         userRepository.save(currentUser);
     }
-
-    // O MÉTODO DUPLICADO getUserById() FOI REMOVIDO
 }

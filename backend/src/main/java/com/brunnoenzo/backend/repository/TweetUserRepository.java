@@ -8,6 +8,10 @@ import org.springframework.stereotype.Repository;
 import com.brunnoenzo.backend.model.TweetUser;
 
 @Repository
+
+/**
+ * (Repositório para a entidade TweetUser.)
+ */
 public interface TweetUserRepository extends JpaRepository<TweetUser, Long> {
     // Método para o Spring Security encontrar o usuário pelo nome
     Optional<TweetUser> findByScreenName(String screenName);

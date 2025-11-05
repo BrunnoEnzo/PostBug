@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { TokenResponseDTO } from '@/app/types/auth'; // Reutiliza seus tipos
+import { TokenResponseDTO } from '@/app/types/auth';
 
 // Define a URL base da sua API
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';

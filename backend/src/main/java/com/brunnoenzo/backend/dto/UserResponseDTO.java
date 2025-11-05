@@ -5,11 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set; // <-- IMPORTAR
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
+/**
+ * (DTO para enviar dados de Usuário nas respostas.)
+ */
 public class UserResponseDTO {
     private Long userid;
     private String screenName;
@@ -18,5 +22,5 @@ public class UserResponseDTO {
     private Role role;
     private int followingCount;
     private int followersCount;
-    private Set<Long> followingIds; // <-- ADICIONAR ESTA LINHA
+    private Set<Long> followingIds;
 }

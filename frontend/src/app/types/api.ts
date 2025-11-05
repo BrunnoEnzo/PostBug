@@ -12,8 +12,6 @@ export interface UserResponseDTO {
   followingCount: number;
   followersCount: number;
   followingIds: number[];
-  // NOTA: O backend DTO não envia a lista de quem o usuário segue,
-  // o que limita a capacidade de exibir "Seguindo" no carregamento.
 }
 
 /**
@@ -33,7 +31,7 @@ export interface TweetResponseDTO {
 export interface CommentResponseDTO {
   id: number;
   content: string;
-  postTime: string; // O Instant é serializado como string
+  postTime: string;
   authorScreenName: string;
   tweetId: number;
   parentCommentId: number | null;

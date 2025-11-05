@@ -95,11 +95,7 @@ export default function TweetFeed() {
     );
   };
 
-  // --- FUNÇÃO ADICIONADA ---
-  /**
-   * Atualiza o estado 'currentUser' localmente quando o usuário
-   * segue ou deixa de seguir alguém, sem precisar de refresh.
-   */
+  // Função para atualizar o estado de 'seguir' do usuário atual
   const handleFollowStateChange = (targetUserId: number, didFollow: boolean) => {
     setCurrentUser(prevUser => {
       if (!prevUser) return null;
@@ -125,8 +121,6 @@ export default function TweetFeed() {
       };
     });
   };
-  // --- FIM DA FUNÇÃO ---
-
 
   return (
     <Container maxWidth="sm" sx={{ py: 4 }}>

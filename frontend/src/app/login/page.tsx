@@ -40,8 +40,6 @@ export default function LoginPage() {
   };
 
   return (
-    // O CONTAINER FOI LIMPO. O 'sx' de layout foi removido.
-    // A tag <main> em globals.css agora controla o espaçamento e centralização.
     <Container maxWidth="xs" sx={{ paddingBlock: '3rem'}}>
       <Box
         sx={{
@@ -68,7 +66,7 @@ export default function LoginPage() {
                 Login
             </Typography>
           <TextField
-            margin="dense" // <-- Campos compactos
+            margin="dense"
             required
             fullWidth
             id="screenName"
@@ -80,7 +78,7 @@ export default function LoginPage() {
             onChange={(e) => setScreenName(e.target.value)}
           />
           <TextField
-            margin="dense" // <-- Campos compactos
+            margin="dense"
             required
             fullWidth
             name="password"

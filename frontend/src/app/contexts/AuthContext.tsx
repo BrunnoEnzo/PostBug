@@ -2,8 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { AuthDTO, TokenResponseDTO } from '@/app/types/auth';
-import api from '@/app/services/api'; // Importa o serviço centralizado
-import { isAxiosError } from 'axios';   // Helper para identificar erros do axios
+import api from '@/app/services/api';
+import { isAxiosError } from 'axios'; 
 
 interface AuthContextType {
   isLoggedIn: boolean;

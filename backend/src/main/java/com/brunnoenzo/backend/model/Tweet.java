@@ -12,15 +12,18 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Objects; // Importar
+import java.util.Objects;
 
 @Entity
-// Substituir @Data
 @Getter
 @Setter
-@ToString(exclude = {"tweetUser", "comments"}) // Excluir relacionamentos
+@ToString(exclude = {"tweetUser", "comments"})
 @NoArgsConstructor
 @AllArgsConstructor
+
+/**
+ * (Entidade representando um tweet postado por um usuário.)
+ */
 public class Tweet {
 
     @Id

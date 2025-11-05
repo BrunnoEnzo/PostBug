@@ -22,6 +22,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
+/**
+ * (Serviço responsável pelas operações relacionadas a comentários.)
+ */
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -57,26 +61,10 @@ public class CommentService {
         newComment.setContent(dto.content());
         newComment.setAuthor(user);
         newComment.setTweet(tweet);
-        newComment.setParentComment(null); // É um comentário raiz
+        newComment.setParentComment(null);
 
         Comment savedComment = commentRepository.save(newComment);
         return mapToCommentResponseDTO(savedComment);
-    }
-
-    @Transactional
-    public CommentResponseDTO replyToComment(Long parentCommentId, CommentCreateDTO dto) {
-        TweetUser user = getAuthenticatedUser();
-        Comment parentComment = commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new EntityNotFoundException("Parent comment not found"));
-
-        Comment newReply = new Comment();
-        newReply.setContent(dto.content());
-        newReply.setAuthor(user);
-        newReply.setTweet(parentComment.getTweet()); // Associa à mesma thread de tweet
-        newReply.setParentComment(parentComment);
-
-        Comment savedReply = commentRepository.save(newReply);
-        return mapToCommentResponseDTO(savedReply);
     }
 
     @Transactional(readOnly = true)

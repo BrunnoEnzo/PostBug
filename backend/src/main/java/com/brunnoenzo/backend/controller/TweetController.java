@@ -19,6 +19,10 @@ import java.util.List;
 @RequestMapping("/api/tweets")
 @RequiredArgsConstructor
 @Tag(name = "Tweets", description = "Endpoints for managing tweets")
+
+/**
+ * (Controlador para gerenciamento de tweets.)
+ */
 public class TweetController {
 
     private final TweetService tweetService;

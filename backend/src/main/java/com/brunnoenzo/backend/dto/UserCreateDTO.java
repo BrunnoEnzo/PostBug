@@ -6,7 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-// DTO para criação de usuário
+/**
+ * (DTO para criar um novo Usuário.)
+ */
 public record UserCreateDTO(
         @NotBlank(message = "Screen name is required")
         String screenName,

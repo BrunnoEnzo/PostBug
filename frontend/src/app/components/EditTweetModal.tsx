@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import api from '@/app/services/api';
-// Importamos os tipos de Tweet e o novo DTO de atualização
 import { TweetResponseDTO, TweetUpdateDTO } from '@/app/types/api';
 
 interface EditTweetModalProps {
@@ -37,9 +36,6 @@ export default function EditTweetModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Este 'useEffect' é crucial:
-  // Ele atualiza o estado 'content' interno do modal
-  // sempre que o modal é aberto com um novo 'tweetToEdit'.
   useEffect(() => {
     if (open && tweetToEdit) {
       setContent(tweetToEdit.content);

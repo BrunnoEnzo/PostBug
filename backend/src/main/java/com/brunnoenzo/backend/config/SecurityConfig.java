@@ -32,6 +32,10 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @EnableWebSecurity
+
+/**
+ * (Configuração de segurança para a aplicação.)
+ */
 public class SecurityConfig {
 
     // Carrega as chaves que você gerou
@@ -43,7 +47,7 @@ public class SecurityConfig {
 
     // URLs públicas que não exigem autenticação
     private static final String[] PUBLIC_URLS = {
-            "/api/auth/**",
+            "/api/auth/**",      // Endpoints de autenticação
             "/v3/api-docs",      // O caminho exato
             "/v3/api-docs/**",   // O wildcard
             "/swagger-ui.html",  // A página
@@ -68,36 +72,32 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Provedor de serviço para buscar usuários (continua igual)
+    // Provedor de serviço para buscar usuários no banco de dados
     @Bean
     public UserDetailsService userDetailsService(TweetUserRepository userRepository) {
         return screenName -> userRepository.findByScreenName(screenName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + screenName));
     }
 
-    // Codificador de senha (continua igual)
+    // Codificador de senha
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Gerenciador de autenticação (continua igual)
+    // Gerenciador de autenticação
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // --- Novos Beans para JWT com RSA ---
-
-    // Cria o "Decodificador" de JWT usando a chave PÚBLICA
-    // O Spring usará isto para validar tokens em CADA requisição protegida
+    // Cria o "Decodificador" de JWT usando a chave pública
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
     // Cria o "Codificador" de JWT usando ambas as chaves
-    // Usaremos isto no TokenService para criar novos tokens
     @Bean
     public JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();

@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * DTO for updating an existing Tweet.
  * (DTO para atualizar um Tweet existente.)
  */
 public record TweetUpdateDTO(

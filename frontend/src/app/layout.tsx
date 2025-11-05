@@ -6,7 +6,7 @@ import "./globals.css";
 import ThemeRegistry from "@/app/ThemeRegistry";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
-import { AuthProvider } from "@/app/contexts/AuthContext"; // <-- IMPORTAR
+import { AuthProvider } from "@/app/contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,12 +33,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* O ThemeRegistry envolve tudo */}
         <ThemeRegistry>
-          {/* O AuthProvider envolve o Header e o conteúdo */}
           <AuthProvider>
             <Header />
-            {/* Tag main para o conteúdo principal */}
             <main>
               {children}
             </main>
