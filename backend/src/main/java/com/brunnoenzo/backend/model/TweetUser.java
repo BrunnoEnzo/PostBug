@@ -3,9 +3,12 @@ package com.brunnoenzo.backend.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+// Importações de Lombok específicas
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +17,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Objects; // Importar Objects para equals/hashCode
 
 @Entity
-@Data // Anotação do Lombok (gera Getters, Setters, equals, hashCode, toString)
+// Substituir @Data por anotações específicas
+@Getter
+@Setter
+@ToString(exclude = {"tweets", "comments", "following", "followers"}) // Exclui coleções do toString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tweet_user") // Nome da tabela
+@Table(name = "tweet_user")
 public class TweetUser implements UserDetails {
 
     @Id
@@ -28,11 +35,11 @@ public class TweetUser implements UserDetails {
 
     @Column(unique = true, nullable = false)
     @NotBlank
-    private String screenName; // username
+    private String screenName;
 
     @Column(nullable = false)
     @NotBlank
-    @Size(min = 6) // Validação de senha
+    @Size(min = 6)
     private String password;
 
     private String profileImage;
@@ -50,29 +57,28 @@ public class TweetUser implements UserDetails {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    // Relacionamento: Lógica de "Seguindo" (Muitos-para-Muitos com ele mesmo)
+    // Relacionamento: Lógica de "Seguindo"
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_following",
-            joinColumns = @JoinColumn(name = "user_id"), // O dono do relacionamento (quem segue)
-            inverseJoinColumns = @JoinColumn(name = "following_id") // Quem está sendo seguido
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
     )
-    private Set<TweetUser> following = new HashSet<>(); // Quem eu sigo
+    private Set<TweetUser> following = new HashSet<>();
 
     @ManyToMany(mappedBy = "following", fetch = FetchType.LAZY)
-    private Set<TweetUser> followers = new HashSet<>(); // Quem me segue
+    private Set<TweetUser> followers = new HashSet<>();
 
     // --- Métodos do UserDetails (Spring Security) ---
-
+    // ... (métodos do UserDetails permanecem iguais) ...
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Define a "ROLE_" prefixo que o Spring Security espera
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
     public String getUsername() {
-        return this.screenName; // Usamos screenName como username
+        return this.screenName;
     }
 
     @Override
@@ -93,5 +99,22 @@ public class TweetUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // --- Métodos equals() e hashCode() manuais ---
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TweetUser tweetUser = (TweetUser) o;
+        // Compara apenas pelo ID. Se for nulo, são diferentes.
+        return userid != null && userid.equals(tweetUser.userid);
+    }
+
+    @Override
+    public int hashCode() {
+        // Usa apenas o ID para o hashCode
+        return Objects.hash(userid);
     }
 }

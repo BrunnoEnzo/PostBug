@@ -1,14 +1,9 @@
-import { Container, Typography } from "@mui/material";
+import TweetFeed from "@/app/components/TweetFeed";
 
 export default function Home() {
   return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Bem-vindo ao Post Bug
-      </Typography>
-      <Typography>
-        Este é o feed principal. Em breve, os tweets aparecerão aqui!
-      </Typography>
-    </Container>
+    // O layout principal já é gerenciado pelo RootLayout
+    // Apenas renderizamos o componente cliente do feed.
+    <TweetFeed />
   );
 }

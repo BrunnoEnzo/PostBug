@@ -1,17 +1,24 @@
 package com.brunnoenzo.backend.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+// Importações de Lombok específicas
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects; // Importar
 
 @Entity
-@Data
+// Substituir @Data
+@Getter
+@Setter
+@ToString(exclude = {"tweetUser", "comments"}) // Excluir relacionamentos
 @NoArgsConstructor
 @AllArgsConstructor
 public class Tweet {
@@ -20,18 +27,31 @@ public class Tweet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp // Define automaticamente o tempo de postagem na criação
+    @CreationTimestamp
     private Instant postTime;
 
-    @Column(nullable = false, length = 280) // Limite de caracteres como o Twitter
+    @Column(nullable = false, length = 280)
     private String content;
 
-    // Relacionamento: Muitos Tweets pertencem a um Usuário
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private TweetUser tweetUser;
 
-    // Relacionamento: Um Tweet tem muitos Comentários
     @OneToMany(mappedBy = "tweet", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
+
+    // --- Métodos equals() e hashCode() manuais ---
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tweet tweet = (Tweet) o;
+        return id != null && id.equals(tweet.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

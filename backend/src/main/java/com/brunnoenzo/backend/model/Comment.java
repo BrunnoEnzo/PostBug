@@ -3,6 +3,7 @@ package com.brunnoenzo.backend.model;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects; // Importar
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,12 +17,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+// Importações de Lombok específicas
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
-@Data
+// Substituir @Data
+@Getter
+@Setter
+@ToString(exclude = {"tweet", "author", "parentComment", "replies"}) // Excluir relacionamentos
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
@@ -36,21 +43,33 @@ public class Comment {
     @CreationTimestamp
     private Instant postTime;
 
-    // Relacionamento: Muitos Comentários pertencem a um Tweet
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tweet_id", nullable = false)
     private Tweet tweet;
 
-    // Relacionamento: Muitos Comentários pertencem a um Autor (Usuário)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private TweetUser author;
 
-    // Relacionamento: Hierarquia de Comentários (Respostas)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id") // Pode ser nulo se for um comentário raiz
+    @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> replies = new HashSet<>();
+
+    // --- Métodos equals() e hashCode() manuais ---
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return id != null && id.equals(comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
