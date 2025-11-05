@@ -1,22 +1,32 @@
-"use client"; // Necessário para componentes MUI interativos e Link
+"use client"; 
 
 import React from "react";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-import Link from "next/link"; // Link do Next.js para navegação
+import Link from "next/link"; 
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/contexts/AuthContext"; // <-- IMPORTAR
 
 export default function Header() {
-  // O tom de azul neon, baseado no seu theme (#3b82f6)
   const neonBlue = "rgba(59, 130, 246, 0.4)"; 
+  
+  // Use o contexto de autenticação
+  const { isLoggedIn, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/'); // Volta para a home após o logout
+  };
 
   return (
     <AppBar
       position="static"
-      elevation={0} // Remove a elevação padrão para o brilho se destacar
+      elevation={0} 
       sx={{
-        backgroundColor: "#ffffffff", // Fundo branco obrigatório
-        color: "rgba(59, 130, 246, 1)", // Cor do texto escura (preto)
+        backgroundColor: "#ffffffff", 
+        color: "rgba(59, 130, 246, 1)", 
         borderBottom: (theme) => `2px solid ${theme.palette.primary.main}`,
-        boxShadow: `0 2px 5px 0 ${neonBlue}`, // Efeito de brilho neon
+        boxShadow: `0 2px 5px 0 ${neonBlue}`, 
       }}
     >
       <Toolbar>
@@ -31,14 +41,28 @@ export default function Header() {
           </Link>
         </Typography>
 
-        {/* Botão de Login à Direita (agora com a cor primária) */}
+        {/* Botão de Login/Logout à Direita */}
         <Box>
-          <Button
-            variant="outlined"
-            color="primary" // Usa a cor primária (azul) para borda e texto
-          >
-            Login
-          </Button>
+          {isLoggedIn ? (
+            // Se estiver logado, mostra "Desconectar"
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleLogout}
+            >
+              Desconectar
+            </Button>
+          ) : (
+            // Se não, mostra "Login" que leva para a página /login
+            <Button
+              component={Link} // Usa o Link do Next.js
+              href="/login"     // Define o destino
+              variant="outlined"
+              color="primary" 
+            >
+              Login
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

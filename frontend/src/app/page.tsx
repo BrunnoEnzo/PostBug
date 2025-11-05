@@ -7,7 +7,7 @@ export default function Home() {
         Bem-vindo ao Post Bug
       </Typography>
       <Typography>
-        Aqui ficará a tela de tweets.
+        Este é o feed principal. Em breve, os tweets aparecerão aqui!
       </Typography>
     </Container>
   );
