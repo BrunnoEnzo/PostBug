@@ -80,27 +80,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <Container 
-        maxWidth="xs"
-        sx={{
-            height: '100%', // Ocupa 100% da altura do <main>
-            display: 'flex',
-            flexDirection: 'column',
-            
-            // Padrão (Mobile): Alinha no topo
-            justifyContent: 'flex-start',
-            
-            // Padrão (Mobile): Adiciona um padding-top de 64px (8 * 8px)
-            pt: 8,
-            pb: 4, // Padding inferior para segurança
-
-            // Media Query (Desktop): Centraliza verticalmente
-            '@media (min-width: 600px)': {
-                justifyContent: 'center',
-                pt: 0, // Reseta o padding no desktop
-                pb: 0,
-            }
-        }}>
+    // O CONTAINER FOI LIMPO. O 'sx' complexo de layout foi removido.
+    // A tag <main> em globals.css agora controla o espaçamento e centralização.
+    <Container maxWidth="xs">
       <Box
         sx={{
           // marginTop: 8, // Removido

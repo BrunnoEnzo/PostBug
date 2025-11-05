@@ -40,9 +40,9 @@ export default function LoginPage() {
   };
 
   return (
-    // O CONTAINER AGORA ESTÁ LIMPO, SEM O SX DE LAYOUT
-    // O padding 'py: 4' é opcional mas bom para telas curtas
-    <Container maxWidth="xs" sx={{ py: 4 }}>
+    // O CONTAINER FOI LIMPO. O 'sx' de layout foi removido.
+    // A tag <main> em globals.css agora controla o espaçamento e centralização.
+    <Container maxWidth="xs">
       <Box
         sx={{
           display: 'flex',
