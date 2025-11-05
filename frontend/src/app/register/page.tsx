@@ -82,7 +82,7 @@ export default function RegisterPage() {
   return (
     // O CONTAINER FOI LIMPO. O 'sx' complexo de layout foi removido.
     // A tag <main> em globals.css agora controla o espaçamento e centralização.
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" sx={{ paddingBlock: '3rem' }}>
       <Box
         sx={{
           // marginTop: 8, // Removido

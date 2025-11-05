@@ -24,24 +24,14 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Altura mínima de 100% da viewport */
   background: var(--background); /* Sempre usará #ffffff */
   color: var(--foreground);      /* Sempre usará #171717 */
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/*
-  MUDANÇA PRINCIPAL AQUI:
-  - flex-grow: 1; (faz o main preencher o espaço)
-  - display: flex; (ativa o flex)
-  - flex-direction: column; (coloca o conteúdo em coluna)
-  - justify-content: center; (CENTRALIZA O CONTEÚDO VERTICALMENTE)
-  - padding-block: 2rem; (Adiciona 32px de padding no topo e embaixo para distância)
-*/
 main {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-block: 3rem; /* Garante a distância mínima do Header/Footer */
 }

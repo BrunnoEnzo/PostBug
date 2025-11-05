@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react'; // <-- Importe o useEffect
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -30,7 +30,7 @@ interface TweetCardProps {
   onDelete: (id: number) => void;
   onOpenComments: (id: number) => void;
   onOpenEdit: (tweet: TweetResponseDTO) => void;
-  onFollowChange: (targetUserId: number, didFollow: boolean) => void; // <-- Prop de callback
+  onFollowChange: (targetUserId: number, didFollow: boolean) => void;
 }
 
 export default function TweetCard({
@@ -39,7 +39,7 @@ export default function TweetCard({
   onDelete,
   onOpenComments,
   onOpenEdit,
-  onFollowChange, // <-- Receba a prop
+  onFollowChange,
 }: TweetCardProps) {
   
   const { isLoggedIn } = useAuth();
@@ -52,24 +52,17 @@ export default function TweetCard({
   const [followLoading, setFollowLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // --- INÍCIO DA CORREÇÃO ---
-  /**
-   * Sincroniza o estado 'isFollowing' com a prop 'currentUser'.
-   * Isso corrige o problema do botão não atualizar após o refresh da página
-   * ou quando o estado do 'currentUser' muda no componente pai.
-   */
   useEffect(() => {
     if (currentUser) {
       setIsFollowing(currentUser.followingIds.includes(tweet.authorId));
     } else {
-      // Se não há usuário logado (ex: logout), reseta o estado
       setIsFollowing(false);
     }
-  }, [currentUser, tweet.authorId]); // Re-execute se currentUser ou o tweet mudar
-  // --- FIM DA CORREÇÃO ---
-
+  }, [currentUser, tweet.authorId]);
 
   const isOwner = isLoggedIn && currentUser?.userid === tweet.authorId;
+  const isAdmin = isLoggedIn && currentUser?.role === 'ADMIN';
+
 
   const handleAuthClick = (action: () => void) => {
     if (!isLoggedIn) {
@@ -85,7 +78,7 @@ export default function TweetCard({
       try {
         await api.post(`/users/${tweet.authorId}/follow`);
         setIsFollowing(true);
-        onFollowChange(tweet.authorId, true); // Notifica o pai
+        onFollowChange(tweet.authorId, true);
       } catch (err) {
         console.error("Falha ao seguir:", err);
       } finally {
@@ -100,7 +93,7 @@ export default function TweetCard({
       try {
         await api.post(`/users/${tweet.authorId}/unfollow`);
         setIsFollowing(false);
-        onFollowChange(tweet.authorId, false); // Notifica o pai
+        onFollowChange(tweet.authorId, false);
       } catch (err) {
         console.error("Falha ao deixar de seguir:", err);
       } finally {
@@ -110,25 +103,29 @@ export default function TweetCard({
   };
 
   const handleDelete = async () => {
-    if (!isOwner) return;
+    if (!isOwner && !isAdmin) return;
     setDeleteLoading(true);
     try {
       await api.delete(`/tweets/${tweet.id}`);
-      onDelete(tweet.id); // Avisa o pai para remover da lista
+      onDelete(tweet.id);
     } catch (err) {
       console.error("Falha ao deletar:", err);
-      setDeleteLoading(false);
+      setDeleteLoading(false); // <-- Permite tentar de novo se falhar
     }
   };
 
+  // --- FUNÇÃO DE RENDERIZAÇÃO CORRIGIDA ---
   const renderActionButtons = () => {
+    
+    // Caso 1: O usuário é o dono do tweet.
+    // Pode editar e excluir. Não pode seguir a si mesmo.
     if (isOwner) {
       return (
         <Box>
           <IconButton
             size="small"
             onClick={() => onOpenEdit(tweet)}
-            className="text-yellow-500" // Tailwind
+            className="text-yellow-500"
           >
             <EditIcon />
           </IconButton>
@@ -136,7 +133,7 @@ export default function TweetCard({
             size="small"
             onClick={handleDelete}
             disabled={deleteLoading}
-            className="text-red-600" // Tailwind
+            className="text-red-600"
           >
             {deleteLoading ? <CircularProgress size={20} /> : <DeleteIcon />}
           </IconButton>
@@ -144,8 +141,11 @@ export default function TweetCard({
       );
     }
 
-    // Não mostra botão de seguir para si mesmo
-    if (!isLoggedIn || (currentUser && currentUser.userid !== tweet.authorId)) {
+    // Caso 2: O usuário NÃO é o dono.
+    // Precisamos renderizar os botões de Seguir E/OU Admin.
+    
+    const followButton = () => {
+      // O usuário (logado ou não) está vendo o tweet de outra pessoa
       if (isFollowing) {
         return (
           <Button
@@ -170,14 +170,40 @@ export default function TweetCard({
           Seguir
         </Button>
       );
-    }
-    return null;
+    };
+
+    const adminDeleteButton = () => {
+      // Se for admin E não for o dono, mostra o botão de excluir
+      if (isAdmin && !isOwner) {
+        return (
+          <IconButton
+            size="small"
+            onClick={handleDelete}
+            disabled={deleteLoading}
+            className="text-red-600"
+            title="Excluir (Admin)"
+          >
+            {deleteLoading ? <CircularProgress size={20} /> : <DeleteIcon />}
+          </IconButton>
+        );
+      }
+      return null;
+    };
+
+    // Retorna um contêiner flex com ambos os botões (se existirem)
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        {followButton()}
+        {adminDeleteButton()}
+      </Box>
+    );
   };
+  // --- FIM DA FUNÇÃO CORRIGIDA ---
 
   return (
     <Card 
-      sx={{ mb: 2, bgcolor: 'grey.50' }} // Fundo cinza claro
-      className="shadow-md" // Tailwind shadow
+      sx={{ mb: 2, bgcolor: 'grey.50' }}
+      className="shadow-md"
     >
       <CardHeader
         avatar={
@@ -185,7 +211,7 @@ export default function TweetCard({
             {tweet.authorScreenName.charAt(0).toUpperCase()}
           </Avatar>
         }
-        action={renderActionButtons()}
+        action={renderActionButtons()} // <-- Chama a função corrigida
         title={
           <Typography variant="h6" className="font-bold">
             @{tweet.authorScreenName}
@@ -194,7 +220,7 @@ export default function TweetCard({
         subheader={new Date(tweet.postTime).toLocaleString()}
       />
       <CardContent>
-        <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
+        <Typography variant="body1" sx={{ wordBreak: 'break-word', fontSize: '1.1rem'}}>
           {tweet.content}
         </Typography>
       </CardContent>
