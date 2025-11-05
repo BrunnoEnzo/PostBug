@@ -43,10 +43,9 @@ export default function TweetCard({
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
-  // NOTA: Como não recebemos a lista de 'following' do backend,
-  // este estado é otimista e não persistirá no refresh.
-  // O ideal seria receber `initialIsFollowing` como prop.
-  const [isFollowing, setIsFollowing] = useState(false); 
+  const initialIsFollowing = currentUser?.followingIds?.includes(tweet.authorId) || false;
+
+  const [isFollowing, setIsFollowing] = useState(initialIsFollowing); 
   
   const [followLoading, setFollowLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);

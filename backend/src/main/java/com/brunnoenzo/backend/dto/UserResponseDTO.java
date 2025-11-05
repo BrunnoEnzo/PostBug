@@ -1,12 +1,22 @@
 package com.brunnoenzo.backend.dto;
 
-// DTO para resposta (sem senha)
-public record UserResponseDTO(
-        Long userid,
-        String screenName,
-        String profileImage,
-        String bio,
-        String role,
-        int followingCount,
-        int followersCount
-) {}
+import com.brunnoenzo.backend.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Set; // <-- IMPORTAR
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserResponseDTO {
+    private Long userid;
+    private String screenName;
+    private String profileImage;
+    private String bio;
+    private Role role;
+    private int followingCount;
+    private int followersCount;
+    private Set<Long> followingIds; // <-- ADICIONAR ESTA LINHA
+}

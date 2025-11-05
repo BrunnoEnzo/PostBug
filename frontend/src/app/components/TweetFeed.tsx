@@ -24,10 +24,10 @@ export default function TweetFeed() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [selectedTweetId, setSelectedTweetId] = useState<number | null>(null);
-
-  // Estado do Modal de Edição
+  
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTweetToEdit, setSelectedTweetToEdit] = useState<TweetResponseDTO | null>(null);
+
 
   const fetchData = async () => {
     setLoading(true);
@@ -82,7 +82,7 @@ export default function TweetFeed() {
     setSelectedTweetId(id);
     setCommentModalOpen(true);
   };
-
+  
   const handleOpenEditModal = (tweet: TweetResponseDTO) => {
     setSelectedTweetToEdit(tweet); // Guarda o tweet que será editado
     setEditModalOpen(true); // Abre o modal
@@ -94,6 +94,39 @@ export default function TweetFeed() {
       prev.map((t) => (t.id === updatedTweet.id ? updatedTweet : t))
     );
   };
+
+  // --- FUNÇÃO ADICIONADA ---
+  /**
+   * Atualiza o estado 'currentUser' localmente quando o usuário
+   * segue ou deixa de seguir alguém, sem precisar de refresh.
+   */
+  const handleFollowStateChange = (targetUserId: number, didFollow: boolean) => {
+    setCurrentUser(prevUser => {
+      if (!prevUser) return null;
+
+      let newFollowingIds: number[];
+
+      if (didFollow) {
+        // Adiciona o ID se não estiver lá
+        if (!prevUser.followingIds.includes(targetUserId)) {
+          newFollowingIds = [...prevUser.followingIds, targetUserId];
+        } else {
+          newFollowingIds = prevUser.followingIds;
+        }
+      } else {
+        // Remove o ID
+        newFollowingIds = prevUser.followingIds.filter(id => id !== targetUserId);
+      }
+      
+      // Retorna um novo objeto para o React atualizar o estado
+      return {
+        ...prevUser,
+        followingIds: newFollowingIds
+      };
+    });
+  };
+  // --- FIM DA FUNÇÃO ---
+
 
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
@@ -140,6 +173,7 @@ export default function TweetFeed() {
               onDelete={handleDeleteTweet}
               onOpenComments={handleOpenComments}
               onOpenEdit={handleOpenEditModal}
+              onFollowChange={handleFollowStateChange} // <-- PROP ADICIONADA
             />
           ))}
         </Box>
