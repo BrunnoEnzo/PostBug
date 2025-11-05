@@ -54,7 +54,7 @@ public class TweetUserService {
                 user.getScreenName(),
                 user.getProfileImage(),
                 user.getBio(),
-                user.getRole().name(),
+                user.getRole(),
                 user.getFollowing().size(),
                 user.getFollowers().size(),
                 followingIds // Passa a lista de IDs para o DTO

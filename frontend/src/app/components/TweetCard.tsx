@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // <-- Importe o useEffect
 import { useRouter } from 'next/navigation';
 import {
   Card,
@@ -30,6 +30,7 @@ interface TweetCardProps {
   onDelete: (id: number) => void;
   onOpenComments: (id: number) => void;
   onOpenEdit: (tweet: TweetResponseDTO) => void;
+  onFollowChange: (targetUserId: number, didFollow: boolean) => void; // <-- Prop de callback
 }
 
 export default function TweetCard({
@@ -38,17 +39,35 @@ export default function TweetCard({
   onDelete,
   onOpenComments,
   onOpenEdit,
+  onFollowChange, // <-- Receba a prop
 }: TweetCardProps) {
   
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
   const initialIsFollowing = currentUser?.followingIds?.includes(tweet.authorId) || false;
-
+  
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing); 
   
   const [followLoading, setFollowLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // --- INÍCIO DA CORREÇÃO ---
+  /**
+   * Sincroniza o estado 'isFollowing' com a prop 'currentUser'.
+   * Isso corrige o problema do botão não atualizar após o refresh da página
+   * ou quando o estado do 'currentUser' muda no componente pai.
+   */
+  useEffect(() => {
+    if (currentUser) {
+      setIsFollowing(currentUser.followingIds.includes(tweet.authorId));
+    } else {
+      // Se não há usuário logado (ex: logout), reseta o estado
+      setIsFollowing(false);
+    }
+  }, [currentUser, tweet.authorId]); // Re-execute se currentUser ou o tweet mudar
+  // --- FIM DA CORREÇÃO ---
+
 
   const isOwner = isLoggedIn && currentUser?.userid === tweet.authorId;
 
@@ -66,6 +85,7 @@ export default function TweetCard({
       try {
         await api.post(`/users/${tweet.authorId}/follow`);
         setIsFollowing(true);
+        onFollowChange(tweet.authorId, true); // Notifica o pai
       } catch (err) {
         console.error("Falha ao seguir:", err);
       } finally {
@@ -80,6 +100,7 @@ export default function TweetCard({
       try {
         await api.post(`/users/${tweet.authorId}/unfollow`);
         setIsFollowing(false);
+        onFollowChange(tweet.authorId, false); // Notifica o pai
       } catch (err) {
         console.error("Falha ao deixar de seguir:", err);
       } finally {
